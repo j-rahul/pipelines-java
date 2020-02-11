@@ -3,20 +3,25 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
-trigger:
-- master
+name: AKS Cleanup Preview
+trigger: none
+pr: none
+schedules:
+  - cron: '0 */12 * * *'
+    displayName: Clean up every 12 hours
+    branches:
+      include:
+        - master
+    always: 'true'
 
-pool:
-  vmImage: 'ubuntu-latest'
+pool: 
+  vmImage: vs2017-win2016
 
 steps:
-- task: Maven@3
+- task: PowerShell@2
   inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commandshere.
+      # Write-Host "Sleeping for 180 secs"
+      # Start-Sleep -s 180
